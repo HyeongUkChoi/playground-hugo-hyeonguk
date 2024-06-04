@@ -24,9 +24,18 @@ resource "google_compute_instance" "vm-an3-jenkins" {
         nat_ip = google_compute_address.pubip-vm-an3-jenkins-ip.address
     }
     }
+
+    metadata = {
+        ssh-keys = google_compute_project_metadata_item.sshkey.value
+    }
     
     allow_stopping_for_update = true
     desired_status = "RUNNING"
+
+    service_account {
+      email = "terraform-hugo@playground-hugo-20240408.iam.gserviceaccount.com"
+      scopes = ["cloud-platform"]
+    }
 
     labels = var.iac-common-labels
 }
